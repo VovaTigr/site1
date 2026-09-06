@@ -104,5 +104,19 @@ echo "<hr>\n";
 $body_temp = rand(350, 400)/10;
 
 echo "<p>Your body temperature is " . $body_temp . " degrees Celsius</p>\n";
-echo ($body_temp < 36.5 ? "<p>You're too cold! You should wear a coat, stay at home and drink hot tea!</p>" : "<p>You're not too cold!</p>");
-echo ($body_temp > 37.5 ? "<p>You're too hot! You should stay at home drink water and stay in bed</p>" : "<p>You're not too hot!</p>");
+echo ($body_temp < 36.5 ? "<p>You're too cold! You should wear a coat, stay at home and drink hot tea!</p>" : "<p>You're not too cold!</p>\n");
+echo ($body_temp > 37.5 ? "<p>You're too hot! You should stay at home drink water and stay in bed</p>" : "<p>You're not too hot!</p>\n");
+
+// 3.5 - The Area of a Circle
+
+$circle = rand(1, 20) * 100;
+$radius = $circle / 2;
+define("PI", 3.14);
+$area = PI * $radius * $radius;
+
+echo "<div class='circle' style='border-radius: 50%; border: solid 2px black; background-color: transparent; width: 200px; height: 200px;'>
+        <hr style='border: none; border-top: solid 2px black; width: 100px; margin: 0; position: relative; top: 50%; left: 0; transform: translateY(-50%);'>
+    </div>;\n";
+echo "<hr>\n";
+echo "The Radius of the circle is " . $radius . " pixels \n";
+echo "The Area of the circle is " . $area . " square pixels";
