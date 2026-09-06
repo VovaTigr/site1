@@ -79,4 +79,23 @@ $body_close = <<<EOD
 </body>
 </html>
 EOD;
-echo $head . "\n" .$body_open . "\n" . $nav_menu . "\n" . $header . "\n" . $main . "\n" . $footer . "\n" . $body_close;
+echo $head . "\n" .$body_open . "\n" . $nav_menu . "\n" . $header . "\n" . $main . "\n" . $footer . "\n" . $body_close . "\n";
+echo "<hr>";
+
+// 3.3 - Temperature
+$temp = round(rand(-20, 50));
+echo "It's " . $temp . " degrees outside";
+if ($temp >= -20 && $temp <= 0) {
+    echo "<p>This is freezing! Won't even gonna go outside!</p>";
+} elseif ($temp >= 1 && $temp <= 10) {
+    echo "<p>It's chilly! Gotta grab a jacket!</p>";
+} elseif ($temp >= 11 && $temp <= 20) {
+    echo "<p>It's cool outside! I like it. I shall go for walk!</p>";
+} elseif ($temp >= 21 && $temp <= 30) {
+    echo "<p>Today is a nice temperature! Let's hang out!!</p>";
+} elseif ($temp >= 31 && $temp <= 40) {
+    echo "<p>Woah! This summer is really cruel. I would rather stay at home</p>";
+} else {
+    echo "<p>I... am... melting...</p>";
+}
+
