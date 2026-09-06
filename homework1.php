@@ -142,3 +142,21 @@ switch ($school_task) {
     case 13: echo "<p>Study Philosophy</p>"; break;
     default: echo "<p>You aren't even allowed to study</p>"; break;
 }
+
+// 3.9 - The Termometer*
+
+$t = rand(-20, 20);
+echo "<table>\n";
+for ($i = -20; $i < 21; $i++) {
+    echo "<tr>\n";
+    for ($j = 0; $j < 2; $j++) {
+        if ($j == 1) {
+            echo "<td style='border: solid 1px black; width: 30px; height: 30px; background-color: " . ($i <= $t ? "red" : "yellow") . ";'></td>\n";
+        }
+        else {
+            echo "<td style='border: solid 1px black; width: 30px; height: 30px;'>$i</td>\n";
+        }
+    }
+    echo "</tr>\n";
+}
+echo "</table>\n";
