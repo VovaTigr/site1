@@ -84,7 +84,7 @@ echo "<hr>\n";
 
 // 3.3 - Temperature Outside
 $temp = round(rand(-20, 50));
-echo "<p>It's " . $temp . " degrees outside</p>\n";
+echo "<h2>It's " . $temp . " degrees outside</h2>\n";
 if ($temp >= -20 && $temp <= 0) {
     echo "<p>This is freezing! Won't even gonna go outside!</p>\n";
 } elseif ($temp >= 1 && $temp <= 10) {
@@ -103,7 +103,7 @@ echo "<hr>\n";
 // 3.4 - On a Doctor's Inspection
 $body_temp = rand(350, 400)/10;
 
-echo "<p>Your body temperature is " . $body_temp . " degrees Celsius</p>\n";
+echo "<h2>Your body temperature is " . $body_temp . " degrees Celsius</h2>\n";
 echo ($body_temp < 36.5 ? "<p>You're too cold! You should wear a coat, stay at home and drink hot tea!</p>" : "<p>You're not too cold!</p>\n");
 echo ($body_temp > 37.5 ? "<p>You're too hot! You should stay at home drink water and stay in bed</p>" : "<p>You're not too hot!</p>\n");
 
@@ -114,17 +114,18 @@ $radius = $circle / 2;
 define("PI", 3.14);
 $area = PI * $radius * $radius;
 
-echo "<div class='circle' style='border-radius: 50%; border: solid 2px black; background-color: transparent; width: $circle px; height: $circle px;'>
-        <hr style='border: none; border-top: solid 2px black; width: $radius px; margin: 0; position: relative; top: 50%; left: 0; transform: translateY(-50%);'>
-    </div>;\n";
-echo "<hr>\n";
+echo "<div class='circle' style='border-radius: 50%; border: solid 2px black; background-color: transparent; width: 200px; height: 200px;'>
+        <hr style='border: none; border-top: solid 2px black; width: 100px; margin: 0; position: relative; top: 50%; left: 0; transform: translateY(-50%);'>
+    </div>;";
+echo "<hr>";
 echo "<p>The Radius of the circle is " . $radius . " pixels </p>\n";
 echo "<p>The Area of the circle is " . $area . " squared pixels</p>\n";
+echo "<hr>\n";
 
 //3.7 - The School tasks
 
 $school_task = round(rand(1, 13));
-echo "<p>Today's school task is: </p>\n";
+echo "<h2>Today's school task is: </h2>\n";
 
 switch ($school_task) {
     case 1: echo "<p></p>Study Mathematics</p>"; break;
@@ -142,18 +143,19 @@ switch ($school_task) {
     case 13: echo "<p>Study Philosophy</p>"; break;
     default: echo "<p>You aren't even allowed to study</p>"; break;
 }
+echo "<hr>\n";
 
 // 3.9 - The Termometer*
 
 $t = rand(-20, 20);
+echo "<h2>The termometer is set to " . $t . " degrees Celsius</h2><br>\n";
 echo "<table>\n";
-for ($i = -20; $i < 21; $i++) {
+for ($i = 20; $i >= -20; $i--) {
     echo "<tr>\n";
     for ($j = 0; $j < 2; $j++) {
         if ($j == 1) {
             echo "<td style='border: solid 1px black; width: 30px; height: 30px; background-color: " . ($i <= $t ? "red" : "yellow") . ";'></td>\n";
-        }
-        else {
+        } else {
             echo "<td style='border: solid 1px black; width: 30px; height: 30px;'>$i</td>\n";
         }
     }
