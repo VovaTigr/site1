@@ -18,7 +18,7 @@ echo "</table>\n";
 // 3.10 - Dynamic References
 $q = 11;
 for ($i = 0; $i < $q; $i++) {
-    $x0 = $x1;
+    $x1 = "x".$i;
     $$x1 = $i;
-    echo ${"x".$i} = $i;
-}
+    echo "". "x".$i . " = " . $i . "; ";
+} 
