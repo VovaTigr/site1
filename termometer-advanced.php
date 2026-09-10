@@ -5,7 +5,8 @@ $lon = 30.4340;
 $apiKey = "f66280bed15ede06a64f3127fb668a15";
 
 // Формируем URL с параметрами (метрическая система и русский язык)
-$url = "https://openweathermap.org{$lat}&lon={$lon}&appid={$apiKey}&units=metric&lang=ru";
+$url = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey";
+
 
 // Подавляем ошибки warning на случай, если сервер вернет 404 или 401
 $response = @file_get_contents($url);
