@@ -27,7 +27,7 @@ if ($response !== false) {
     echo "<h2>The pressure now is " . $pressure . " pasckals</h2><br>\n";
     echo "<h2>The humidity is now is " . $humidity . " %</h2><br>\n";
     echo "<table>\n";
-    for ($i = 20; $i >= -20; $i--) {
+    for ($i = 40; $i >= -40; $i--) {
         echo "<tr>\n";
         for ($j = 0; $j < 2; $j++) {
             if ($j == 1) {
