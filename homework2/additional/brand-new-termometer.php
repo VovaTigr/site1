@@ -38,6 +38,9 @@ if ($response !== false) {
         $emoji = '🌨️';
         $weather = 'Snowy';
     }
+    // switch ($weather) {
+    //     case 'Rain': $weather = 'Raining'; $emoji = '🌧️'; break
+    // }
     echo "<h2>The weather in Odesa is quite great. It's " . $weather ." right now $emoji</h2>\n";
     echo "<table>\n";
     for ($i = 40; $i >= -40; $i--) {
