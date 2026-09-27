@@ -1,0 +1,12 @@
+{
+    "chat.agent.sandbox.advanced.runtime": {
+
+        "enableWeakerNestedSandbox": false
+    },
+    "chat.agent.sandbox.fileSystem.windows": {
+        
+        "denyRead": [],
+        "allowRead": [],
+        "allowWrite": []
+    }
+}
