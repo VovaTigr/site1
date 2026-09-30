@@ -1,16 +1,15 @@
 <?php
-    $emails = [
-        "Email 1" => "andriykotz228@gmail.com",
-        "Email 2" => "ilya_mazelov_432@gmail.com",
-        "Email 3" => "sviridenkov@chernomorsky.com",
-        "Email 4" => "3434%4@gmail.com"
-    ];
-    $reg = '/^([a-zA-Z0-9._]||[a-zA_Z])+@gmail+\.com$/';
-    $res = [];
-    foreach ($emails as $key => $value) {
-        if (preg_match_all($reg, $value)) {
-            $res[] = $value;
-        } 
-    }
-    print_r($res)
+    $text = '<p>Права пользователей:</p>
+    <ul>
+        <li>Administrator</li>
+        <li>Editor</li>
+        <li>Subscriber</li>
+    </ul>';
+
+$pattern = '/<li>(.*?)<\/li>/i';
+$replacement = '<li><a href="http://www.php.kh.ua/script.php?role=$1">$1</a></li>';
+
+$result = preg_replace($pattern, $replacement, $text);
+
+echo $result;
 ?>

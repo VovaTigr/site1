@@ -37,7 +37,7 @@ function search($books, $data) {
                     } else {
                         foreach ($value as $k => $v) {
                             if (stristr($v, $data) || stristr($k, $data)) {
-                                $result[] = $book_number;
+                                $result[] = $book_number; // 0$k - 0$v
                             }
                         }
                     }
@@ -55,11 +55,11 @@ function search($books, $data) {
     echo $data . $i . " ";
     foreach ($book as $key => $value) {
         if (! is_array($value)) {
-            echo "$key:$value,\n\t";
+            echo "$key:$value,\t<br>";
         } else {
             echo "$key:";
             foreach ($value as $k => $v) {
-                echo " $v";
+                echo " $v<br>";
             }
         }
     }
@@ -91,7 +91,7 @@ function search($books, $data) {
     </style>
 </head>
 <body>
-    <h2><?php $temp = search($books, "Ox");
+    <h2><?php $temp = search($books, "My");
     array_walk($temp, "print_book", "№"); ?></h2>
     <table>
         <tr>
