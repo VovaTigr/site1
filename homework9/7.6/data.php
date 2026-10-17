@@ -23,7 +23,7 @@
     function secretWord(array $array) {
         $res = "";
         foreach ($array as $index => $value) {
-            $res .= $value[0];
+            $res .= $value[0]; // Array ([0] => "Nikolai")
         }
         return "<h2>$res</h2>\n";
     }

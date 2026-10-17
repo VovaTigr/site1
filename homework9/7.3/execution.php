@@ -1,6 +1,6 @@
 <?php
     require ("data.php");
-
+    $str = "";
     foreach ($people as $key => $man_info) {
     $event_key = $letter[$key];
     $str .= "DATE\n";
