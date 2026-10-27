@@ -135,30 +135,6 @@
     <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
         <div class="group">
             <div class="form-group">
-                <label>Skill Type</label><br>
-                <select name="skill_type">
-                    <option value="skill-1" <?php echo ($skill_type == 'skill-1') ? 'selected' : ''; ?>>Skill 1</option>
-                    <option value="skill-2" <?php echo ($skill_type == 'skill-2') ? 'selected' : ''; ?>>Skill 2</option>
-                    <option value="skill-3" <?php echo ($skill_type == 'skill-3') ? 'selected' : ''; ?>>Skill 3</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Skill Affinity</label><br>
-                <select name="skill_affinity">
-                    <option value="wrath" <?php echo ($skill_affinity == 'wrath') ? 'selected' : ''; ?>>Wrath</option>
-                    <option value="lust" <?php echo ($skill_affinity == 'lust') ? 'selected' : ''; ?>>Lust</option>
-                    <option value="sloth" <?php echo ($skill_affinity == 'sloth') ? 'selected' : ''; ?>>Sloth</option>
-                    <option value="gluttony" <?php echo ($skill_affinity == 'gluttony') ? 'selected' : ''; ?>>Gluttony</option>
-                    <option value="pride" <?php echo ($skill_affinity == 'pride') ? 'selected' : ''; ?>>Pride</option>
-                    <option value="gloom" <?php echo ($skill_affinity == 'gloom') ? 'selected' : ''; ?>>Gloom</option>
-                    <option value="envy" <?php echo ($skill_affinity == 'envy') ? 'selected' : ''; ?>>Envy</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Insert an icon of your skill</label><br>
-                <input type="file" name="skill_icon">
-            </div>
-            <div class="form-group">
                 <label>Choose the base power of your skill</label><br>
                 <input type="text" name="base_power" value="<?php echo $default_base_power ?>"><br>
             </div>
@@ -184,16 +160,40 @@
                 <option value="erase" <?php echo ($coin_type == 'erase') ? 'selected' : ''; ?>>Erase</option>
             </select>
         </div>
+        <div class="form-group">
+                <label>Choose your skill type</label><br>
+                <select name="skill_type">
+                    <option value="skill-1" <?php echo ($skill_type == 'skill-1') ? 'selected' : ''; ?>>Skill 1</option>
+                    <option value="skill-2" <?php echo ($skill_type == 'skill-2') ? 'selected' : ''; ?>>Skill 2</option>
+                    <option value="skill-3" <?php echo ($skill_type == 'skill-3') ? 'selected' : ''; ?>>Skill 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Choose an affinity (sin) for your skill</label><br>
+                <select name="skill_affinity">
+                    <option value="wrath" <?php echo ($skill_affinity == 'wrath') ? 'selected' : ''; ?>>Wrath</option>
+                    <option value="lust" <?php echo ($skill_affinity == 'lust') ? 'selected' : ''; ?>>Lust</option>
+                    <option value="sloth" <?php echo ($skill_affinity == 'sloth') ? 'selected' : ''; ?>>Sloth</option>
+                    <option value="gluttony" <?php echo ($skill_affinity == 'gluttony') ? 'selected' : ''; ?>>Gluttony</option>
+                    <option value="pride" <?php echo ($skill_affinity == 'pride') ? 'selected' : ''; ?>>Pride</option>
+                    <option value="gloom" <?php echo ($skill_affinity == 'gloom') ? 'selected' : ''; ?>>Gloom</option>
+                    <option value="envy" <?php echo ($skill_affinity == 'envy') ? 'selected' : ''; ?>>Envy</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Insert an icon of your skill</label><br>
+                <input type="file" name="skill_icon">
+            </div>
         <input type="submit" value="Submit" name="submit_skill">
         <input type="submit" value="Reset" name="reset">
     </form>
     
     <?php if ($showSkills && $skill_border != ''): ?>
-        <div class="skill-display" style="position: relative; width: 50px; height: 50px; display: inline-block; margin-top: 10px;">
+        <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
             <?php if ($skill_icon != ''): ?>
-                <img src="<?= $skill_icon ?>" alt="skill icon" style="width: 26px; height: 26px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0;">
+                <img src="<?= $skill_icon ?>" alt="skill icon" style="width: 60px; height: 60px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0;">
             <?php endif; ?>
-            <img src="<?= $skill_border ?>" alt="skill border" style="width: 50px; height: 50px; position: absolute; top: 0; left: 0; z-index: 1;">
+            <img src="<?= $skill_border ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
         </div>
     <?php endif; ?>
         </div>
@@ -204,23 +204,23 @@
             "images/coin-heads.png",
             "images/coin-tails.png"
         ];
-        if (coinType !== 'regular') {
-            if (coinType == 'unbreakable') {
-                headsTails = [
+        switch(coinType) {
+            case 'unbreakable': headsTails = [
+                    "images/unbreakable-coin-heads.png",
+                    "images/unbreakable-coin-tails.png"
+                ]; break;
+            case 'excision': headsTails = [
                     "images/excision-coin-heads.png",
-                    "images/coin-tails.png"
-                ];
-            } else if (coinType == 'excision') {
-                headsTails = [
-                    "images/exicision-coin-heads.png",
-                    "images/coin-tails.png"
-                ];
-            } else if (coinType == 'erase') {
-                headsTails = [
-                    "images/coin-heads.png",
-                    "images/coin-broken.png"
-                ];
-            }
+                    "images/excision-coin-tails.png"
+                ]; break;
+            case 'erase': headsTails = [
+                    "images/erase-coin-heads.png",
+                    "images/erase-coin-broken.png"
+                ]; break;
+            default: headsTails = [
+            "images/coin-heads.png",
+            "images/coin-tails.png"
+            ];
         }
         let currentIndex = 0;
         let isHeads = <?php echo json_encode($coins); ?>;
