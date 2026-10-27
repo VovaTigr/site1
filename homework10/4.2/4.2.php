@@ -75,10 +75,10 @@
                     $initial_coin_image = 'images/unbreakable-coin-regular.png'; 
                     break;
                 case "excision": 
-                    $initial_coin_image = 'images/coin-regular.png'; 
+                    $initial_coin_image = 'images/excision-coin-regular.png'; 
                     break;
                 case "erase": 
-                    $initial_coin_image = 'images/coin-regular.png'; 
+                    $initial_coin_image = 'images/erase-coin-regular.png'; 
                     break;
                 default: 
                     $initial_coin_image = 'images/coin-regular.png';
