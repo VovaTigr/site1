@@ -70,28 +70,37 @@
             }
         }
         
-        if (!isset($_POST['base_power']) || $_POST['base_power'] === '' || 
-            !isset($_POST['coin_power']) || $_POST['coin_power'] === '' || 
-            !isset($_POST['coin_count']) || $_POST['coin_count'] === '' || 
-            !isset($_POST['sp']) || $_POST['sp'] === '') {
+        if (!isset($_POST['your_base_power']) || $_POST['your_base_power'] === '' || !isset($_POST['opp_base_power']) || $_POST['opp_base_power'] === '' || 
+            !isset($_POST['your_coin_power']) || $_POST['your_coin_power'] === '' || !isset($_POST['opp_coin_power']) || $_POST['opp_coin_power'] === '' || 
+            !isset($_POST['your_coin_count']) || $_POST['your_coin_count'] === '' || !isset($_POST['opp_coin_count']) || $_POST['opp_coin_count'] === '' || 
+            !isset($_POST['your_sp']) || $_POST['your_sp'] === '' || !isset($_POST['opp_sp']) || $_POST['opp_sp'] === '') {
             echo "<h2>Enter a value and submit it into all inputs</h2>";
-        } elseif (!is_numeric($_POST['base_power']) || !is_numeric($_POST['coin_power']) || !is_numeric($_POST['coin_count']) || !is_numeric($_POST['sp'])) {
+        } elseif (!is_numeric($_POST['your_sp']) || !is_numeric($_POST['opp_sp'])) {
             echo "<h2>All parameters must be numbers</h2>";
         } else {
             $showSkillsYour = true;
             $showSkillsOpp = true;
-            $base_power = $_POST['base_power'];
-            $coin_power = $_POST['coin_power'];
-            $coin_count = $_POST['coin_count'];
-            $sp = $_POST['sp'];
-            $chance = null;
-            $final_coin_power = null;
-            $coins = array();
+            $your_base_power = $_POST['your_base_power'];
+            $your_coin_power = $_POST['your_coin_power'];
+            $your_coin_count = $_POST['your_coin_count'];
+            $your_sp = $_POST['your_sp'];
+            $your_chance = null;
+            $your_final_coin_power = null;
+            $your_coins = array();
+
+            $opp_base_power = $_POST['your_base_power'];
+            $opp_coin_power = $_POST['your_coin_power'];
+            $opp_coin_count = $_POST['your_coin_count'];
+            $opp_sp = $_POST['your_sp'];
+            $opp_chance = null;
+            $opp_final_coin_power = null;
+            $opp_coins = array();
             
-            if ($sp < -45 || $sp > 45) {
+            if (($your_sp < -45 || $your_sp > 45) || ($opp_sp < -45 || $opp_sp > 45)) {
                 echo "<h2>You've read the requirements, didn'cha</h2>";
             } else {
-                $chance = $sp + 50;
+                $your_chance = $your_sp + 50;
+                $opp_chance = $opp_sp + 50;
             }
             
             switch($coin_type) {
@@ -108,7 +117,7 @@
                     $initial_coin_image = 'images/coin-regular.png';
             }
             
-            $final_power = $base_power + $final_coin_power;
+            $your_final_power = $your_base_power + $your_final_coin_power;
         }
     } elseif (isset($_POST['reset'])) {
         unset($_POST);
@@ -182,26 +191,39 @@
                 </div>
                 <div class="form-group">
                     <label>Set your skill's base power</label><br>
-                    <input type="number" name="base_power" value="<?php echo $default_base_power ?>"><br>
+                    <input type="number" name="your_base_power" value="<?php echo $default_base_power ?>"><br>
                 </div>
                 <div class="form-group">
                     <label>Set your skill's coin power</label><br>
-                    <input type="number" name="coin_power" value="<?php echo $default_coin_power ?>">
+                    <input type="number" name="your_coin_power" value="<?php echo $default_coin_power ?>">
                 </div>
                 <div class="form-group">
                     <label>Set your skill's coin count</label><br>
-                    <input type="number" name="coin_count" value="<?php echo $default_coin_count ?>">
+                    <input type="number" name="your_coin_count" value="<?php echo $default_coin_count ?>">
                 </div>
                 <div class="form-group">
                     <label>Set your character's SP (from -45 to 45)</label><br>
-                    <input type="text" name="sp" value="<?php echo $default_sp ?>">
+                    <input type="text" name="your_sp" value="<?php echo $default_sp ?>">
                 </div>
                 <?php if ($showSkillsYour && $skill_border_your != ''): ?>
-                    <div class="skill-display" style="position: relative; width: 50px; height: 50px; display: inline-block; margin-top: 10px;">
+                    <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
                         <?php if ($skill_icon_your != ''): ?>
-                            <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 26px; height: 26px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0;">
+                            <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
                         <?php endif; ?>
-                        <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 50px; height: 50px; position: absolute; top: 0; left: 0; z-index: 1;">
+                        <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
+                        <?php
+                            for ($i = 0; $i < $your_coin_count; $i++) {
+                                $roll = rand(1, 100);
+                                if ($your_chance !== null && $roll <= $your_chance) {
+                                    $your_coins[$i] = "heads";
+                                    $your_final_coin_power += $coin_power;
+                                } else {
+                                    $your_coins[$i] = "tails";
+                                }
+                                $image = "<img src='" . $initial_coin_image . "' alt='" . $coins[$i] . "' class='coin' id='$i'>";
+                                echo $image;
+                            }
+                        ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -249,29 +271,30 @@
                     <input type="text" name="opp_sp" value="<?php echo $default_sp ?>">
                 </div>
                 <?php if ($showSkillsOpp && $skill_border_opp != ''): ?>
-                    <div class="skill-display" style="position: relative; width: 50px; height: 50px; display: inline-block; margin-top: 10px;">
+                    <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
                         <?php if ($skill_icon_opp != ''): ?>
-                            <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 26px; height: 26px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0;">
+                            <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%;">
                         <?php endif; ?>
-                        <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 50px; height: 50px; position: absolute; top: 0; left: 0; z-index: 1;">
+                        <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
+                        <?php
+                            for ($i = 0; $i < $opp_coin_count; $i++) {
+                                $roll = rand(1, 100);
+                                if ($opp_chance !== null && $roll <= $your_chance) {
+                                    $opp_coins[$i] = "heads";
+                                    $opp_final_coin_power += $coin_power;
+                                } else {
+                                    $opp_coins[$i] = "tails";
+                                }
+                                $image = "<img src='" . $initial_coin_image . "' alt='" . $coins[$i] . "' class='coin' id='$i'>";
+                                echo $image;
+                            }
+                        ?>
                     </div>
+
                 <?php endif; ?>
-                <?php
-                    for ($i = 0; $i < $coin_count; $i++) {
-                        $roll = rand(1, 100);
-                        if ($chance !== null && $roll <= $chance) {
-                            $coins[$i] = "heads";
-                            $final_coin_power += $coin_power;
-                        } else {
-                            $coins[$i] = "tails";
-                        }
-                        $image = "<img src='" . $initial_coin_image . "' alt='" . $coins[$i] . "' class='coin' id='$i'>";
-                        echo $image;
-                    }
-                ?>
             </div>
         </div>
-        <div class="form-group" style="margin-top: 10px;">
+        <div class="form-group">
             <label>Choose a Coin Type</label><br>
             <select name="coin_type">
                 <option value="regular" <?php echo ($coin_type == 'regular') ? 'selected' : ''; ?>>Regular</option>
@@ -280,13 +303,15 @@
                 <option value="erase" <?php echo ($coin_type == 'erase') ? 'selected' : ''; ?>>Erase</option>
             </select>
         </div>
-        <input type="submit" value="Submit" name="submit_skill">
-        <input type="submit" value="Reset" name="reset">
+        <div class="button-group">
+            <input type="submit" value="Submit" name="submit_skill">
+            <input type="submit" value="Reset" name="reset">
+        </div>
+        
     </form>
-    
     <script>
         const coinType = '<?php echo $coin_type; ?>';
-        const coins = document.querySelectorAll(".coin");
+        const coin = document.querySelectorAll(".coin");
         let headsTails = [
             "images/coin-heads.png",
             "images/coin-tails.png"
