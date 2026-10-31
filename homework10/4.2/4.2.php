@@ -173,16 +173,21 @@
         }
         .display {
             display: flex;
-            align-items: center;
+            height: 100px;
+            width: 200px;
+            align-items: start;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            gap: 20px;
         }
         .side {
             width: 45%;
         }
         h3 {
-            position: absolute;
+            position: relative;
             font-family: 'Excelsior Sans';
             font-size: 60px;
-            transform: translate(-50%)
+            height: 50px;
         }
         .coin {
             width: 25px;
@@ -199,6 +204,35 @@
             100% {
                 transform: rotateY(0deg);
             }
+        }
+
+        .shape {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff781b;
+            z-index: -1;
+
+            clip-path: polygon(
+                4.3% 25.8%,
+                25.6% 17.6%,
+                32.4% 58.4%,
+                86.9% 50.2%,
+                100% 77%,
+                7.2% 74.9%
+            );
+            transform: translate(35%, -25%);
+        }
+        .coin-power {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Excelsior Sans';
+            font-size: 25px;
+            color: #C9B18E;
+            -webkit-text-stroke: #5A300C 1px;
+            z-index: 2;
         }
     </style>
 </head>
@@ -250,10 +284,12 @@
                 <div class="display">
                     <?php if ($showSkillsYour && $skill_border_your != ''): ?>
                         <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
+                            <div class='shape'></div>
+                            <div class='coin-power'>+<?= $your_coin_power ?></div>
                             <?php if ($skill_icon_your != ''): ?>
-                                <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
+                                <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
                             <?php endif; ?>
-                            <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
+                            <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: -10%; left: 0; z-index: 1;">
                         </div>
                         <div class="coin-group">
                             <?php
@@ -319,9 +355,9 @@
                     <?php if ($showSkillsOpp && $skill_border_opp != ''): ?>
                         <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
                             <?php if ($skill_icon_opp != ''): ?>
-                                <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
+                                <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
                             <?php endif; ?>
-                            <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
+                            <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: -10%; left: 0; z-index: 1;">
                         </div>
                         <div class="coin-group">
                             <?php

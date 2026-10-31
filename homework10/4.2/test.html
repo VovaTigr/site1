@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Фигура +7</title>
+
+<style>
+    body {
+        margin: 0;
+        background: #f5f5f5;
+    }
+
+    .container {
+        position: relative;
+        width: 488px;
+        height: 267px;
+    }
+
+    /* Оранжевая фигура */
+    .shape {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #ff781b;
+
+        clip-path: polygon(
+            4.3% 25.8%,
+            25.6% 17.6%,
+            32.4% 58.4%,
+            86.9% 50.2%,
+            97.1% 79%,
+            7.2% 74.9%
+        );
+    }
+
+    /* Текст отдельно от фигуры */
+    .number {
+        position: absolute;
+        left: 51px;
+        top: 34px;
+
+        font-family: Arial, sans-serif;
+        font-size: 80px;
+        font-weight: bold;
+        line-height: 1;
+
+        color: #c49a70;
+        -webkit-text-stroke: 2px #49331e;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="shape"></div>
+    <div class="number">+7</div>
+</div>
+
+</body>
+</html>
