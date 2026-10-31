@@ -3,6 +3,20 @@
     $default_coin_power = 4;
     $default_coin_count = 3;
     $default_sp = 0;
+    $your_coin_count = $default_coin_count;
+    $opp_coin_count = $default_coin_count;
+    $your_base_power = $default_base_power;
+    $opp_base_power = $default_base_power;
+    $your_coin_power = $default_coin_power;
+    $opp_coin_power = $default_coin_power;
+    $your_sp = $default_sp;
+    $opp_sp = $default_sp;
+    $your_chance = null;
+    $opp_chance = null;
+    $your_final_coin_power = 0;
+    $opp_final_coin_power = 0;
+    $your_final_power = $default_base_power;
+    $opp_final_power = $default_base_power;
     $coin_type = 'regular';
     $skill_type_your = 'skill-1';
     $skill_affinity_your = 'wrath';
@@ -20,7 +34,7 @@
     $initial_coin_image = 'images/coin-regular.png';
     
     function findSkillBorder($skillType, $skillAffinity) {
-        $imagesDir = 'images/';
+        $imagesDir = 'images/skill-borders/';
         $number = str_replace('skill-', '', $skillType);
         $affinityLower = strtolower($skillAffinity);
         
@@ -75,7 +89,10 @@
             !isset($_POST['your_coin_count']) || $_POST['your_coin_count'] === '' || !isset($_POST['opp_coin_count']) || $_POST['opp_coin_count'] === '' || 
             !isset($_POST['your_sp']) || $_POST['your_sp'] === '' || !isset($_POST['opp_sp']) || $_POST['opp_sp'] === '') {
             echo "<h2>Enter a value and submit it into all inputs</h2>";
-        } elseif (!is_numeric($_POST['your_sp']) || !is_numeric($_POST['opp_sp'])) {
+        } elseif (!is_numeric($_POST['your_base_power']) || !is_numeric($_POST['opp_base_power']) ||
+                  !is_numeric($_POST['your_coin_power']) || !is_numeric($_POST['opp_coin_power']) ||
+                  !is_numeric($_POST['your_coin_count']) || !is_numeric($_POST['opp_coin_count']) ||
+                  !is_numeric($_POST['your_sp']) || !is_numeric($_POST['opp_sp'])) {
             echo "<h2>All parameters must be numbers</h2>";
         } else {
             $showSkillsYour = true;
@@ -85,15 +102,15 @@
             $your_coin_count = $_POST['your_coin_count'];
             $your_sp = $_POST['your_sp'];
             $your_chance = null;
-            $your_final_coin_power = null;
+            $your_final_coin_power = 0;
             $your_coins = array();
 
-            $opp_base_power = $_POST['your_base_power'];
-            $opp_coin_power = $_POST['your_coin_power'];
-            $opp_coin_count = $_POST['your_coin_count'];
-            $opp_sp = $_POST['your_sp'];
+            $opp_base_power = $_POST['opp_base_power'];
+            $opp_coin_power = $_POST['opp_coin_power'];
+            $opp_coin_count = $_POST['opp_coin_count'];
+            $opp_sp = $_POST['opp_sp'];
             $opp_chance = null;
-            $opp_final_coin_power = null;
+            $opp_final_coin_power = 0;
             $opp_coins = array();
             
             if (($your_sp < -45 || $your_sp > 45) || ($opp_sp < -45 || $opp_sp > 45)) {
@@ -118,6 +135,7 @@
             }
             
             $your_final_power = $your_base_power + $your_final_coin_power;
+            $opp_final_power = $opp_base_power + $opp_final_coin_power;
         }
     } elseif (isset($_POST['reset'])) {
         unset($_POST);
@@ -135,16 +153,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Limbus Coin Fight</title>
     <style>
+        @font-face {
+            font-family: 'Mikodacs';
+            src: url('fonts/Mikodacs.otf') format('otf');
+        }
+        @font-face {
+            font-family: 'Excelsior Sans';
+            src: url('fonts/ExcelsiorSans.ttf') format('ttf');
+        }
         .container {
             display: flex;
             justify-content: space-between;
         }
+        h2 {
+            font-family: 'Mikodacs';
+            font-size: 40px;
+            letter-spacing: 2px;
+            display: block;
+        }
+        .display {
+            display: flex;
+            align-items: center;
+        }
         .side {
             width: 45%;
         }
+        h3 {
+            position: absolute;
+            font-family: 'Excelsior Sans';
+            font-size: 60px;
+            transform: translate(-50%)
+        }
         .coin {
-            width: 50px;
-            height: 50px;
+            width: 25px;
+            height: 25px;
         } 
         .coin.toss {
             animation: coin-toss 0.7s linear 1;
@@ -164,7 +206,7 @@
     <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST" enctype="multipart/form-data">
         <div class="container">
             <div class="side">
-                <h3>Your Skill</h3>
+                <h2>Your Skill</h2>
                 <div class="form-group">
                     <label>Set your skill type</label><br>
                     <select name="skill_type_your">
@@ -205,31 +247,34 @@
                     <label>Set your character's SP (from -45 to 45)</label><br>
                     <input type="text" name="your_sp" value="<?php echo $default_sp ?>">
                 </div>
-                <?php if ($showSkillsYour && $skill_border_your != ''): ?>
-                    <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
-                        <?php if ($skill_icon_your != ''): ?>
-                            <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
-                        <?php endif; ?>
-                        <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
-                        <?php
-                            for ($i = 0; $i < $your_coin_count; $i++) {
-                                $roll = rand(1, 100);
-                                if ($your_chance !== null && $roll <= $your_chance) {
-                                    $your_coins[$i] = "heads";
-                                    $your_final_coin_power += $coin_power;
-                                } else {
-                                    $your_coins[$i] = "tails";
+                <div class="display">
+                    <?php if ($showSkillsYour && $skill_border_your != ''): ?>
+                        <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
+                            <?php if ($skill_icon_your != ''): ?>
+                                <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
+                            <?php endif; ?>
+                            <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
+                        </div>
+                        <div class="coin-group">
+                            <?php
+                                for ($i = 0; $i < $your_coin_count; $i++) {
+                                    $roll = rand(1, 100);
+                                    if ($roll <= $your_chance) {
+                                        $your_coins[$i] = "heads";
+                                        $your_final_coin_power += $your_coin_power;
+                                    } else {
+                                        $your_coins[$i] = "tails";
+                                    }
+                                    $image = "<img src='" . $initial_coin_image . "' alt='" . $your_coins[$i] . "' class='coin' id='$i' data-result='" . $your_coins[$i] . "'>";
+                                    echo isset($your_sp) ? $image : "";
                                 }
-                                $image = "<img src='" . $initial_coin_image . "' alt='" . $coins[$i] . "' class='coin' id='$i'>";
-                                echo $image;
-                            }
-                        ?>
-                    </div>
-                <?php endif; ?>
+                            ?>
+                        </div>
+                    <?php endif; ?>
+                </div>  
             </div>
-            
             <div class="side">
-                <h3>Opponent's Skill</h3>
+                <h2>Opponent's Skill</h2>
                 <div class="form-group">
                     <label>Set opponent's skill type</label><br>
                     <select name="skill_type_opp">
@@ -270,28 +315,31 @@
                     <label>Set opponent's SP (from -45 to 45)</label><br>
                     <input type="text" name="opp_sp" value="<?php echo $default_sp ?>">
                 </div>
-                <?php if ($showSkillsOpp && $skill_border_opp != ''): ?>
-                    <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
-                        <?php if ($skill_icon_opp != ''): ?>
-                            <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%;">
-                        <?php endif; ?>
-                        <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
-                        <?php
-                            for ($i = 0; $i < $opp_coin_count; $i++) {
-                                $roll = rand(1, 100);
-                                if ($opp_chance !== null && $roll <= $your_chance) {
-                                    $opp_coins[$i] = "heads";
-                                    $opp_final_coin_power += $coin_power;
-                                } else {
-                                    $opp_coins[$i] = "tails";
+                <div class="display">
+                    <?php if ($showSkillsOpp && $skill_border_opp != ''): ?>
+                        <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
+                            <?php if ($skill_icon_opp != ''): ?>
+                                <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
+                            <?php endif; ?>
+                            <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: 0; left: 0; z-index: 1;">
+                        </div>
+                        <div class="coin-group">
+                            <?php
+                                for ($i = 0; $i < $opp_coin_count; $i++) {
+                                    $roll = rand(1, 100);
+                                    if ($roll <= $opp_chance) {
+                                        $opp_coins[$i] = "heads";
+                                        $opp_final_coin_power += $opp_coin_power;
+                                    } else {
+                                        $opp_coins[$i] = "tails";
+                                    }
+                                    $image = "<img src='" . $initial_coin_image . "' alt='" . $opp_coins[$i] . "' class='coin' id='$i' data-result='" . $opp_coins[$i] . "'>";
+                                    echo isset($opp_sp) ? $image : "";
                                 }
-                                $image = "<img src='" . $initial_coin_image . "' alt='" . $coins[$i] . "' class='coin' id='$i'>";
-                                echo $image;
-                            }
-                        ?>
-                    </div>
-
-                <?php endif; ?>
+                            ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -316,40 +364,38 @@
             "images/coin-heads.png",
             "images/coin-tails.png"
         ];
-        if (coinType !== 'regular') {
-            if (coinType == 'unbreakable') {
-                headsTails = [
+        switch(coinType) {
+            case "unbreakable": headsTails = [
+                    "images/unbreakable-coin-heads.png",
+                    "images/unbreakable-coin-tails.png"
+                ]; break
+            case 'excision': headsTails = [
                     "images/excision-coin-heads.png",
-                    "images/coin-tails.png"
-                ];
-            } else if (coinType == 'excision') {
-                headsTails = [
-                    "images/excision-coin-heads.png",
-                    "images/coin-tails.png"
-                ];
-            } else if (coinType == 'erase') {
-                headsTails = [
-                    "images/coin-heads.png",
-                    "images/coin-broken.png"
-                ];
-            }
+                    "images/excision-coin-tails.png"
+                ]; break
+            case 'erase': headsTails = [
+                    "images/erase-coin-heads.png",
+                    "images/erase-coin-tails.png"
+                ]; break
+            default: headsTails = [
+                "images/coin-heads.png",
+                "images/coin-tails.png"
+            ];
         }
-        let currentIndex = 0;
-        let isHeads = <?php echo json_encode($coins); ?>;
-        coins.forEach((img, index) => {
+        coin.forEach((img, index) => {
             img.addEventListener('animationend', () => {
-                if (isHeads && isHeads[currentIndex] == "heads") {
+                const result = img.dataset.result;
+                if (result === "heads") {
                     img.src = headsTails[0];
                     img.alt = "heads";
-                } else if (isHeads && isHeads[currentIndex] == "tails") {
+                } else if (result === "tails") {
                     img.src = headsTails[1];
                     img.alt = "tails";
                 }
-                currentIndex = (currentIndex + 1) % (isHeads.length || 1);
             });
 
             setInterval(() => {
-                img.classList.add('toss');
+                img.classList.add('toss');    
             }, 500 + index * 600);
         });
     </script>
