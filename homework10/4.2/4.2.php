@@ -119,6 +119,28 @@
                 $your_chance = $your_sp + 50;
                 $opp_chance = $opp_sp + 50;
             }
+            for ($i = 0; $i < $your_coin_count; $i++) {
+                $roll = rand(1, 100);
+                if ($roll <= $your_chance) {
+                    $your_coins[$i] = "heads";
+                    $your_final_coin_power += $your_coin_power;
+                } else {
+                    $your_coins[$i] = "tails";
+                }
+            }
+
+            for ($i = 0; $i < $opp_coin_count; $i++) {
+                $roll = rand(1, 100);
+                if ($roll <= $opp_chance) {
+                    $opp_coins[$i] = "heads";
+                    $opp_final_coin_power += $opp_coin_power;
+                } else {
+                    $opp_coins[$i] = "tails";
+                }
+            }
+
+            $your_final_power = $your_base_power + $your_final_coin_power;
+            $opp_final_power = $opp_base_power + $opp_final_coin_power;
             
             switch($coin_type) {
                 case "unbreakable": 
@@ -133,12 +155,11 @@
                 default: 
                     $initial_coin_image = 'images/coin-regular.png';
             }
-            
-            $your_final_power = $your_base_power + $your_final_coin_power;
-            $opp_final_power = $opp_base_power + $opp_final_coin_power;
         }
     } elseif (isset($_POST['reset'])) {
         unset($_POST);
+        unset($your_final_power, $your_final_coin_power, $opp_final_power, $opp_final_coin_power);
+        unset($your_chance, $opp_chance);
         header("Location:" . $_SERVER['PHP_SELF']);
         exit;
     } else {
@@ -178,7 +199,6 @@
             align-items: start;
             margin-top: 20px;
             margin-bottom: 20px;
-            gap: 20px;
         }
         .side {
             width: 45%;
@@ -192,8 +212,9 @@
         .coin {
             width: 25px;
             height: 25px;
-        } 
-        .coin.toss {
+        }
+
+        .toss {
             animation: coin-toss 0.7s linear 1;
         }
 
@@ -206,22 +227,38 @@
             }
         }
 
+        .figure {
+            position: relative;
+            width: 100%;
+            max-width: 488px;
+            aspect-ratio: 488 / 267;
+            container-type: inline-size;
+        }
+
         .shape {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #ff781b;
-            z-index: -1;
+            inset: 0;
+            width: 200%;
+            height: 200%;
+            left: 20%;
+            transform: translate(0, -27%);
+        }
 
-            clip-path: polygon(
-                4.3% 25.8%,
-                25.6% 17.6%,
-                32.4% 58.4%,
-                86.9% 50.2%,
-                100% 77%,
-                7.2% 74.9%
-            );
-            transform: translate(35%, -25%);
+        .final-power {
+            position: absolute;
+            font-family: 'Excelsior Sans';
+            font-size: 65px;
+            font-weight: bold;
+            background-image: radial-gradient(circle, #FDF5CE 0%, #FFFFF1 100%);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: url(#thick-stroke);
+            z-index: 3;
+            left: <?php echo $your_final_power >= 20 ? "24%" : "28%" ?>;
+            transform: translate(0, -57%);
+        }
+        .final-power.opp {
+             left: <?php echo $opp_final_power >= 20 ? "24%" : "28%" ?>;
         }
         .coin-power {
             position: absolute;
@@ -284,23 +321,50 @@
                 <div class="display">
                     <?php if ($showSkillsYour && $skill_border_your != ''): ?>
                         <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
-                            <div class='shape'></div>
+                            <div class="figure">
+                                <svg class="shape"
+                                viewBox="0 0 488 267"
+                                preserveAspectRatio="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <polygon
+                                    points="
+                                        21,69
+                                        125,47
+                                        158,156
+                                        424,134
+                                        475,211
+                                        35,200
+                                    "
+                                    fill="#ff781b"
+                                />
+                                </svg>
+                            </div>
                             <div class='coin-power'>+<?= $your_coin_power ?></div>
+                            <div class="final-power"><?= $your_final_power ?></div>
+                            <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://w3.org">
+                            <defs>
+                              <filter id="thick-stroke">
+                                <!-- 1. Берем контур текста и расширяем его (3px — это радиус/толщина обводки) -->
+                                <feMorphology operator="dilate" radius="1.5" in="SourceAlpha" result="thicken" />
+                                <!-- 2. Окрашиваем расширенный контур в черный цвет (#000000) -->
+                                <feFlood flood-color="#BB6B45" result="stroke-color" />
+                                <feComposite in="stroke-color" in2="thicken" operator="in" result="stroke" />
+                                <!-- 3. Кладем оригинальный градиентный текст ПОВЕРХ созданной обводки -->
+                                <feMerge>
+                                  <feMergeNode in="stroke" />
+                                  <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                              </filter>
+                            </defs>
+                          </svg>
                             <?php if ($skill_icon_your != ''): ?>
-                                <img src="<?= $skill_icon_your ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
+                                <img src="<?= $skill_icon_your ?>" alt="skill icon" class="skill-icon" style="width: 65px; height: 65px; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
                             <?php endif; ?>
-                            <img src="<?= $skill_border_your ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: -10%; left: 0; z-index: 1;">
+                            <img src="<?= $skill_border_your ?>" alt="skill border" class="skill-border" style="width: 100px; height: 100px; position: absolute; top: -10%; left: 0; z-index: 1;">
                         </div>
                         <div class="coin-group">
                             <?php
                                 for ($i = 0; $i < $your_coin_count; $i++) {
-                                    $roll = rand(1, 100);
-                                    if ($roll <= $your_chance) {
-                                        $your_coins[$i] = "heads";
-                                        $your_final_coin_power += $your_coin_power;
-                                    } else {
-                                        $your_coins[$i] = "tails";
-                                    }
                                     $image = "<img src='" . $initial_coin_image . "' alt='" . $your_coins[$i] . "' class='coin' id='$i' data-result='" . $your_coins[$i] . "'>";
                                     echo isset($your_sp) ? $image : "";
                                 }
@@ -354,21 +418,50 @@
                 <div class="display">
                     <?php if ($showSkillsOpp && $skill_border_opp != ''): ?>
                         <div class="skill-display" style="position: relative; width: 100px; height: 100px; display: inline-block; margin-top: 10px;">
+                            <div class="figure">
+                                <svg class="shape"
+                                viewBox="0 0 488 267"
+                                preserveAspectRatio="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <polygon
+                                    points="
+                                        21,69
+                                        125,47
+                                        158,156
+                                        424,134
+                                        475,211
+                                        35,200
+                                    "
+                                    fill="#ff781b"
+                                />
+                                </svg>
+                            </div>
+                            <div class='coin-power'>+<?= $opp_coin_power ?></div>
+                            <div class="final-power opp"><?= $opp_final_power ?></div>
+                            <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://w3.org">
+                            <defs>
+                              <filter id="thick-stroke">
+                                <!-- 1. Берем контур текста и расширяем его (3px — это радиус/толщина обводки) -->
+                                <feMorphology operator="dilate" radius="1.5" in="SourceAlpha" result="thicken" />
+                                <!-- 2. Окрашиваем расширенный контур в черный цвет (#000000) -->
+                                <feFlood flood-color="#BB6B45" result="stroke-color" />
+                                <feComposite in="stroke-color" in2="thicken" operator="in" result="stroke" />
+                                <!-- 3. Кладем оригинальный градиентный текст ПОВЕРХ созданной обводки -->
+                                <feMerge>
+                                  <feMergeNode in="stroke" />
+                                  <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                              </filter>
+                            </defs>
+                          </svg>
                             <?php if ($skill_icon_opp != ''): ?>
-                                <img src="<?= $skill_icon_opp ?>" alt="skill icon" style="width: 65px; height: 65px; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
+                                <img src="<?= $skill_icon_opp ?>" alt="skill icon" class="skill-icon" style="width: 65px; height: 65px; position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); object-fit: contain; z-index: 0; border-radius: 50%">
                             <?php endif; ?>
-                            <img src="<?= $skill_border_opp ?>" alt="skill border" style="width: 100px; height: 100px; position: absolute; top: -10%; left: 0; z-index: 1;">
+                            <img src="<?= $skill_border_opp ?>" alt="skill border" class="skill-border" style="width: 100px; height: 100px; position: absolute; top: -10%; left: 0; z-index: 1;">
                         </div>
                         <div class="coin-group">
                             <?php
                                 for ($i = 0; $i < $opp_coin_count; $i++) {
-                                    $roll = rand(1, 100);
-                                    if ($roll <= $opp_chance) {
-                                        $opp_coins[$i] = "heads";
-                                        $opp_final_coin_power += $opp_coin_power;
-                                    } else {
-                                        $opp_coins[$i] = "tails";
-                                    }
                                     $image = "<img src='" . $initial_coin_image . "' alt='" . $opp_coins[$i] . "' class='coin' id='$i' data-result='" . $opp_coins[$i] . "'>";
                                     echo isset($opp_sp) ? $image : "";
                                 }
@@ -394,12 +487,15 @@
         
     </form>
     <script>
-        const coinType = '<?php echo $coin_type; ?>';
+        const coinType = '<?= $coin_type; ?>';
         const coin = document.querySelectorAll(".coin");
         let headsTails = [
             "images/coin-heads.png",
             "images/coin-tails.png"
         ];
+        let finalPower = document.querySelectorAll('.final-power');
+        let yourFinalPower = <?= $your_final_power ?>;
+        let opponentFinalPower = <?= $opp_final_power ?>;
         switch(coinType) {
             case "unbreakable": headsTails = [
                     "images/unbreakable-coin-heads.png",
@@ -418,7 +514,7 @@
                 "images/coin-tails.png"
             ];
         }
-        coin.forEach((img, index) => {
+        coin.forEach((img) => {
             img.addEventListener('animationend', () => {
                 const result = img.dataset.result;
                 if (result === "heads") {
@@ -429,10 +525,10 @@
                     img.alt = "tails";
                 }
             });
-
+            const coinId = parseInt(img.id) || 0;
             setInterval(() => {
                 img.classList.add('toss');    
-            }, 500 + index * 600);
+            }, 500 + coinId * 600);
         });
     </script>
 </body>
