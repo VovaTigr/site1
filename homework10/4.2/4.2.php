@@ -29,7 +29,15 @@
     $skill_border_opp = '';
     $skill_icon_opp = '';
     $showSkillsOpp = false;
-    
+    $shape_colors = [
+        "wrath" => "#FE0000",
+        "lust" => "#FF781B",
+        "sloth" => "#F7C729",
+        "gluttony" => "#9DFE00",
+        "pride" => "#0049D3",
+        "gloom" => "#0DC1EB",
+        "envy" => "#9300DB"
+    ];
     $coins = array();
     $initial_coin_image = 'images/coin-regular.png';
     
@@ -248,17 +256,19 @@
             position: absolute;
             font-family: 'Excelsior Sans';
             font-size: 65px;
-            font-weight: bold;
-            background-image: radial-gradient(circle, #FDF5CE 0%, #FFFFF1 100%);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            text-shadow: 
+                0 0 2px rgba(255, 255, 255, 0.29),
+                0 0 4px rgba(255, 255, 255, 0.25),
+                0 0 2px rgba(255, 255, 255, 0.4);
             filter: url(#thick-stroke);
             z-index: 3;
-            left: <?php echo $your_final_power >= 20 ? "24%" : "28%" ?>;
+            left: <?php echo $your_final_power >= 20 ? "27%" : "30%" ?>;
             transform: translate(0, -57%);
+            letter-spacing: -4px;
         }
         .final-power.opp {
-             left: <?php echo $opp_final_power >= 20 ? "24%" : "28%" ?>;
+             left: <?php echo $opp_final_power >= 20 ? "27%" : "30%" ?>;
         }
         .coin-power {
             position: absolute;
@@ -335,7 +345,7 @@
                                         475,211
                                         35,200
                                     "
-                                    fill="#ff781b"
+                                    fill="<?= $shape_colors[$skill_affinity_your] ?>"
                                 />
                                 </svg>
                             </div>
@@ -345,9 +355,9 @@
                             <defs>
                               <filter id="thick-stroke">
                                 <!-- 1. Берем контур текста и расширяем его (3px — это радиус/толщина обводки) -->
-                                <feMorphology operator="dilate" radius="1.5" in="SourceAlpha" result="thicken" />
+                                <feMorphology operator="dilate" radius="1.3" in="SourceAlpha" result="thicken" />
                                 <!-- 2. Окрашиваем расширенный контур в черный цвет (#000000) -->
-                                <feFlood flood-color="#BB6B45" result="stroke-color" />
+                                <feFlood flood-color="<?= $shape_colors[$skill_affinity_your] ?>" result="stroke-color" />
                                 <feComposite in="stroke-color" in2="thicken" operator="in" result="stroke" />
                                 <!-- 3. Кладем оригинальный градиентный текст ПОВЕРХ созданной обводки -->
                                 <feMerge>
@@ -432,7 +442,7 @@
                                         475,211
                                         35,200
                                     "
-                                    fill="#ff781b"
+                                    fill="<?= $shape_colors[$skill_affinity_opp] ?>"
                                 />
                                 </svg>
                             </div>
@@ -442,9 +452,9 @@
                             <defs>
                               <filter id="thick-stroke">
                                 <!-- 1. Берем контур текста и расширяем его (3px — это радиус/толщина обводки) -->
-                                <feMorphology operator="dilate" radius="1.5" in="SourceAlpha" result="thicken" />
+                                <feMorphology operator="dilate" radius="1" in="SourceAlpha" result="thicken" />
                                 <!-- 2. Окрашиваем расширенный контур в черный цвет (#000000) -->
-                                <feFlood flood-color="#BB6B45" result="stroke-color" />
+                                <feFlood flood-color="<?= $shape_colors[$skill_affinity_opp] ?>" result="stroke-color" />
                                 <feComposite in="stroke-color" in2="thicken" operator="in" result="stroke" />
                                 <!-- 3. Кладем оригинальный градиентный текст ПОВЕРХ созданной обводки -->
                                 <feMerge>
