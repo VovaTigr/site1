@@ -1,0 +1,1 @@
+a:4:{s:19:"William Shakespeare";s:6:"Hamlet";s:11:"Jane Austen";s:19:"Pride and Prejudice";s:13:"George Orwell";s:4:"1984";s:16:"Ernest Hemingway";s:23:"The Old Man and the Sea";}
